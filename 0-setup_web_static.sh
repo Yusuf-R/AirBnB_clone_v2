@@ -3,6 +3,9 @@
 # creates several directories as well as a sym link
 
 # Install Nginx if not already installed
+# -x is used to check if the file is avaiable and executable
+# command -v will return the aboslute path + filename
+# command -v nginx == /usr/sbin/nginx
 if [ ! -x "$(command -v nginx)" ]; then
     sudo service "$(sudo lsof -i :80 | grep LISTEN | awk '{print $1}' | head -n 1)" stop &/dev/null;
     sudo apt-get update
