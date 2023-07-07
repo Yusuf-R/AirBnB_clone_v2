@@ -21,7 +21,7 @@ def do_pack():
     ct_time = datetime.now().strftime("%Y%m%d%H%M%S")
 
     # set our archive name
-    archive_name = "web_static_" + ct_time + ".tgz"
+    archive_name = "web_static_{}.tgz".format(ct_time)
 
     # set path
     path = "versions/{}".format(archive_name)
