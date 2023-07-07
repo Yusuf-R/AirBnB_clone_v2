@@ -28,7 +28,9 @@ def do_pack():
 
     try:
         local("mkdir -p versions")
+        print("Packing web_static to {}".format(path))
         local("tar -cvzf {} web_static".format(path))
+        print("web_static packed: {}".format(path))
         return path
     except Error:
         return None
