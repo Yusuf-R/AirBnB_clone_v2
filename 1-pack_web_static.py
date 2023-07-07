@@ -6,6 +6,7 @@ webstatic files
 
 from datetime import datetime
 from fabric.api import local
+from os.path import isdir
 
 
 def do_pack():
@@ -27,10 +28,11 @@ def do_pack():
     path = "versions/{}".format(archive_name)
 
     try:
-        local("mkdir -p versions")
-        print("Test file")
+        if isdir("versions") is False:
+            local("mkdir -p versions")
+        print("Packing web_static to {}".format(path))
         local("tar -cvzf {} web_static".format(path))
-        print("Test file")
+        print("web_static packed: {}".format(path))
         return path
-    except Error:
+    except:
         return None
