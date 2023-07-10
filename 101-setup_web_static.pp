@@ -1,15 +1,58 @@
-# Using PPA for task 0: Installs nginx and configures server to listen on port 80.
-exec { '/usr/bin/env apt-get -y update' : }
--> exec { '/usr/bin/env apt-get -y install nginx' : }
--> exec { '/usr/bin/env sed -i "/listen \[::\]:80 default_server/ a\\\trewrite ^/redirect_me http://www.holbertonschool.com permanent;" /etc/nginx/sites-available/default' : }
--> exec { '/usr/bin/env sed -i "/listen \[::\]:80 default_server/ a\\\tadd_header X-Served-By \"\$HOSTNAME\";" /etc/nginx/sites-available/default' : }
--> exec { '/usr/bin/env sed -i "/redirect_me/ a\\\terror_page 404 /custom_404.html;" /etc/nginx/sites-available/default' : }
--> exec { '/usr/bin/env # echo "Ceci n\'est pas une page" > /var/www/html/custom_404.html' : }
--> exec { '/usr/bin/env service nginx start' : }
--> exec { '/usr/bin/env mkdir -p /data/web_static/releases/test/' : }
--> exec { '/usr/bin/env mkdir -p /data/web_static/shared/' : }
--> exec { '/usr/bin/env echo "Hello Holberton School!" > /data/web_static/releases/test/index.html' : }
--> exec { '/usr/bin/env ln -sf /data/web_static/releases/test/ /data/web_static/current' : }
--> exec { '/usr/bin/env sed -i "/^\tlocation \/ {$/ i\\\tlocation /hbnb_static {\n\t\talias /data/web_static/current/;\n\t\tautoindex off;\n}" /etc/nginx/sites-available/default' : }
--> exec { '/usr/bin/env service nginx restart' : }
--> exec { '/usr/bin/env chown -R ubuntu:ubuntu /data/' : }
+# Puppet manifest to install nginx and setup some directories and a symlink
+
+exec { 'update-index':
+    command => '/usr/bin/apt-get update',
+}
+
+package { 'nginx':
+    ensure  => installed,
+    require => Exec[ 'update-index' ],
+}
+
+file { ['/data', '/data/web_static/', '/data/web_static/releases/', '/data/web_static/releases/test/', '/data/web_static/shared/']:
+    ensure => directory,
+}
+
+exec { 'chown -hR ubuntu:ubuntu /data':
+    path    => '/usr/bin/:/usr/local/bin/:/bin/',
+    require => File[ '/data' ],
+}
+
+file { '/data/web_static/releases/test/index.html':
+    ensure  => file,
+    content => '<html><head><title>Test HTML File</title></head><body><h1>Hello World!</h1></body></html>',
+    require => File[ '/data/web_static/releases/test' ],
+}
+
+file { '/data/web_static/current':
+    ensure  => link,
+    target  => '/data/web_static/releases/test/',
+    force   => true,
+    require => [File[ '/data/web_static/releases/test/index.html' ], Exec['chown -hR ubuntu:ubuntu /data']],
+}
+
+file { '/etc/nginx/sites-available/default':
+    ensure  => present,
+    content => 'server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    server_name _;
+    root /var/www/html;
+    index index.html index.htm index.nginx-debian.html;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    location /hbnb_static {
+        alias /data/web_static/current/;
+        autoindex off;
+    }
+}',
+}
+
+service { 'nginx':
+    ensure    => running,
+    enable    => true,
+    subscribe => File[ '/etc/nginx/sites-available/default' ],
+}
