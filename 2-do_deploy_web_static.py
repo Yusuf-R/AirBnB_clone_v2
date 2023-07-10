@@ -6,7 +6,7 @@ Fabric script template to generate a .tgz archive
 from fabric.api import put, env, run, task
 from os.path import exists
 
-env.host = ["54.160.90.38", "100.25.36.19"]
+env.hosts = ["54.160.90.38", "100.25.36.19"]
 env.user = "ubuntu"
 
 
