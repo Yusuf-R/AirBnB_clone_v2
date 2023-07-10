@@ -6,7 +6,7 @@ import os
 from datetime import datetime
 import tarfile
 
-env.hosts = ["54.237.18.123", "100.26.239.31"]
+env.hosts = ["54.160.90.38", "100.25.36.19"]
 env.user = "ubuntu"
 
 
