@@ -8,8 +8,8 @@ from fabric.api import local, put, env, run
 from datetime import datetime
 from os.path import exists
 
-env.hosts = ['54.237.18.123', '100.26.239.31']
-
+env.hosts = ["54.160.90.38", "100.25.36.19"]
+env.user = "ubuntu"
 
 def do_pack():
     """Compress the web_static folder"""
