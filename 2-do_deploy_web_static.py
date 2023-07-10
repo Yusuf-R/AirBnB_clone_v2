@@ -6,8 +6,7 @@ Fabric script template to generate a .tgz archive
 from fabric.api import put, env, run
 from os.path import exists
 
-env.hosts = ["54.237.18.123", "100.26.239.31"]
-
+env.host = ["354.160.90.38", "100.25.36.19"]
 
 def do_deploy(archive_path):
     """Deploys the web static to the server"""
