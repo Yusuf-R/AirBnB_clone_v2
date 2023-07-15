@@ -2,8 +2,7 @@
 """
 Script will deploy our static files to our webservers
 """
-from fabric.api import cd, env, sudo, run, task, put
-# from fabric.context_managers import cd
+from fabric.api import cd, env, sudo, put
 from os.path import exists
 
 
@@ -19,7 +18,6 @@ env.hosts = ["54.160.90.38", "100.25.36.19"]
 env.user = "ubuntu"
 
 
-@task
 def do_deploy(archive_path):
     """
     Function to deploy our static files
@@ -75,10 +73,10 @@ def do_deploy(archive_path):
         sudo("rm -rf {}".format(symbolic_link))
 
         # ln -s link_source link_name
-        sudo("ln -s {} {}".format(arch_dest))
+        sudo("ln -s {} {}".format(arch_dest, symbolic_link))
     
         print("All done")
 
     except Exception:
-              print("Failed to deploy succesfully")
-              return False
+        print("Failed to deploy succesfully")
+        return False
