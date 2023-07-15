@@ -5,16 +5,7 @@ Script will deploy our static files to our webservers
 from fabric.api import cd, env, sudo, put
 from os.path import exists
 
-
-# IP address for our web servers defined as host
 env.hosts = ["54.160.90.38", "100.25.36.19"]
-# env.hosts = ["100.26.233.228", "34.229.67.124"]
-
-
-# load balancer
-# env.hosts = ["34.229.70.109"]
-
-# username
 env.user = "ubuntu"
 
 
@@ -41,7 +32,7 @@ def do_deploy(archive_path):
 
         # to get the filename without tgz
         file = file_tgz.split(".")[0]
-    
+
         # download destination for my put command
         dest = "/tmp/"
 
@@ -50,7 +41,7 @@ def do_deploy(archive_path):
 
         # sym link to my archive dest
         symbolic_link = "/data/web_static/current"
-        
+
         # start message
         print("Deploying {} to our server".format(file))
 
@@ -64,7 +55,8 @@ def do_deploy(archive_path):
             sudo("mkdir -p {}".format(arch_dest))
 
             # uncompress to the destnaion created
-            sudo("tar -xzf {} -C {} --strip-components=1".format(file_tgz, arch_dest))
+            sudo("tar -xzf {} -C {} --strip-components=1"
+                 .format(file_tgz, arch_dest))
 
             # delete the tgz file
             sudo("rm -rf {}".format(file_tgz))
@@ -74,7 +66,6 @@ def do_deploy(archive_path):
 
         # ln -s link_source link_name
         sudo("ln -s {} {}".format(arch_dest, symbolic_link))
-    
         print("All done")
 
     except Exception:
