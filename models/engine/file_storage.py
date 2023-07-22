@@ -83,7 +83,6 @@ class FileStorage:
         except KeyError:
             pass
 
-
     def close(self):
         """Calls reload() method"""
         self.reload()
