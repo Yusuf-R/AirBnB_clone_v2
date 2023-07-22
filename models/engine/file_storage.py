@@ -82,3 +82,8 @@ class FileStorage:
             FileStorage.save(self)
         except KeyError:
             pass
+
+
+    def close(self):
+        """Calls reload() method"""
+        self.reload()
