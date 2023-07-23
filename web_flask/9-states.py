@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 """script that lists all cities from a given state"""
-from os import stat
 from flask import Flask, render_template
 from models import storage
 from models.state import State
