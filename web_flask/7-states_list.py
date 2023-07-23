@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""List all the states in the DB in HTML""""
+"""List all the states in the DB in HTML"""
 
 from flask import Flask, render_template
 from models import storage
