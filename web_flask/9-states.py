@@ -12,20 +12,10 @@ app = Flask(__name__)
 def states_by_state(id):
     """lists all cities from a given state"""
     all_states = storage.all(State).values()
-
-    if not id:
-        return render_template('9-states.html',
-                               match_state=None,
-                               states=all_states)
-
-    for state in all_states:
-        if state.id == id:
-            return render_template('9-states.html',
-                                   match_state=state,
-                                   states=None)
-    return render_template('9-state.html',
-                           match_state=None,
-                           states=None)
+    st_id = None
+    if id:
+        st_id = "State." + id
+    return render_template('9-states.html', st_db=all_states, st_id=st_id)
 
 
 @app.teardown_appcontext
